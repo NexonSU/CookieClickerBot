@@ -6,15 +6,14 @@ import os
 from pynput import keyboard
 
 pyautogui.PAUSE = 0.01
+ClickerEnabled = multiprocessing.Value('i', True)
+GoldClickerEnabled = multiprocessing.Value('i', True)
+BuyerEnabled = multiprocessing.Value('i', True)
 
-ClickerEnabled = True
-GoldClickerEnabled = True
-BuyerEnabled = True
-
-def SearchAndClick(file, confidenceValue):
+def SearchAndClick(file, confidenceValue, Enabled):
     while True:
         CW = pyautogui.getActiveWindow()
-        if CW is not None and "Cookie Clicker" in CW.title and GoldClickerEnabled:
+        if CW is not None and "Cookie Clicker" in CW.title and Enabled.value:
             try:
                 pos = pyautogui.locateCenterOnScreen(file, grayscale=True, confidence=confidenceValue)
                 pyautogui.moveTo(pos.x, pos.y)
@@ -22,10 +21,10 @@ def SearchAndClick(file, confidenceValue):
                 pass
         time.sleep(2.5)
 
-def AutoBuy():
+def AutoBuy(Enabled):
     while True:
         CW = pyautogui.getActiveWindow()
-        if CW is not None and "Cookie Clicker" in CW.title and BuyerEnabled:
+        if CW is not None and "Cookie Clicker" in CW.title and Enabled.value:
             pyautogui.click(CW.width+CW.left-550, CW.top+200)
             time.sleep(0.1)
             ltx = CW.width+CW.left-550
@@ -43,43 +42,44 @@ def ClickColorInRegion(ltx, lty, rbx, rby, r, g, b):
                 pyautogui.click(ltx+x, lty+y)
                 return
 
-def ClickTheCookie():
+def ClickTheCookie(Enabled):
     while True:
         CW = pyautogui.getActiveWindow()
-        if CW is not None and "Cookie Clicker" in CW.title and ClickerEnabled:
+        if CW is not None and "Cookie Clicker" in CW.title and Enabled.value:
             pyautogui.click(CW.width*0.15+CW.left, CW.height*0.39+CW.top, clicks=5, interval=0.001, _pause=False)
         else:
             time.sleep(1)
 
 def ToogleClicker():
-    global ClickerEnabled
-    if ClickerEnabled:
-        ClickerEnabled = False
+    if ClickerEnabled.value:
+        ClickerEnabled.value = False
     else:
-        ClickerEnabled = True
+        ClickerEnabled.value = True
 
 def ToogleGoldClicker():
-    global GoldClickerEnabled
-    if GoldClickerEnabled:
-        GoldClickerEnabled = False
+    if GoldClickerEnabled.value:
+        GoldClickerEnabled.value = False
     else:
-        GoldClickerEnabled = True
+        GoldClickerEnabled.value = True
 
 def ToogleBuyer():
-    global BuyerEnabled
-    if BuyerEnabled:
-        BuyerEnabled = False
+    if BuyerEnabled.value:
+        BuyerEnabled.value = False
     else:
-        BuyerEnabled = True
+        BuyerEnabled.value = True
 
 def Exit():
+    searcher.terminate()
+    userSearcher.terminate()
+    clicker.terminate()
+    buyer.terminate()
     os._exit(0)
 
 if __name__ == '__main__':
-    searcher = multiprocessing.Process(target=SearchAndClick, args=('goldCookie.png', .5))
-    userSearcher = multiprocessing.Process(target=SearchAndClick, args=('goldCookie_user.png', .5))
-    clicker = multiprocessing.Process(target=ClickTheCookie)
-    buyer = multiprocessing.Process(target=AutoBuy)
+    searcher = multiprocessing.Process(target=SearchAndClick, args=('goldCookie.png', .5, GoldClickerEnabled))
+    userSearcher = multiprocessing.Process(target=SearchAndClick, args=('goldCookie_user.png', .5, GoldClickerEnabled))
+    clicker = multiprocessing.Process(target=ClickTheCookie, args=(ClickerEnabled,))
+    buyer = multiprocessing.Process(target=AutoBuy, args=(BuyerEnabled,))
 
     searcher.start()
     userSearcher.start()
