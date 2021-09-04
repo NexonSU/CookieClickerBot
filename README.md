@@ -10,3 +10,10 @@ Simple Cookie Clicker bot on python
 pip install -r requirements.txt
 python bot.py
 ```
+# Hotkeys
+```
+CTRL+ALT+C - toogle cookie clicker
+CTRL+ALT+G - toogle goldcookier clicker
+CTRL+ALT+B - toogle auto buy
+ESC - exit
+```
