@@ -3,9 +3,10 @@ import pyautogui
 import time
 import multiprocessing
 import os
+import random
 from pynput import keyboard
 
-pyautogui.PAUSE = 0.01
+pyautogui.PAUSE = 0.001
 ClickerEnabled = multiprocessing.Value('i', True)
 GoldClickerEnabled = multiprocessing.Value('i', True)
 BuyerEnabled = multiprocessing.Value('i', True)
@@ -16,10 +17,10 @@ def SearchAndClick(file, confidenceValue, Enabled):
         if CW is not None and "Cookie Clicker" in CW.title and Enabled.value:
             try:
                 pos = pyautogui.locateCenterOnScreen(file, grayscale=True, confidence=confidenceValue)
-                pyautogui.moveTo(pos.x, pos.y)
+                pyautogui.click(pos.x, pos.y)
             except:
                 pass
-        time.sleep(0.25)
+        time.sleep(3)
 
 def AutoBuy(Enabled):
     while True:
@@ -46,7 +47,10 @@ def ClickTheCookie(Enabled):
     while True:
         CW = pyautogui.getActiveWindow()
         if CW is not None and "Cookie Clicker" in CW.title and Enabled.value:
-            pyautogui.click(CW.width*0.15+CW.left, CW.height*0.39+CW.top, clicks=5, interval=0.001, _pause=False)
+            offset = int(pyautogui.size().width*0.03)
+            x = CW.width*0.155+CW.left + random.randint(-offset, offset)
+            y = CW.height*0.42+CW.top + random.randint(-offset, offset)
+            pyautogui.click(x, y)
         else:
             time.sleep(1)
 
