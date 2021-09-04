@@ -36,7 +36,7 @@ def ClickTheCookie():
     while True:
         curwintitle = pyautogui.getActiveWindowTitle()
         if type(curwintitle) == str and "Cookie Clicker" in curwintitle:
-            pyautogui.click(600, 850, clicks=100, interval=0.0001)
+            pyautogui.click(600, 850, clicks=10, interval=0.001)
 
 searcher = threading.Thread(target=SearchAndClick, args=('goldCookie3.png', 0.9))
 clicker = threading.Thread(target=ClickTheCookie)
