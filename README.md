@@ -10,6 +10,7 @@ Simple Cookie Clicker bot on python
 pip install -r requirements.txt
 python bot.py
 ```
+5) Launch Cookie Clicker with maximized window.
 # Hotkeys
 ```
 CTRL+ALT+C - toogle cookie clicker
