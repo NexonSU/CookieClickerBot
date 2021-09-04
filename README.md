@@ -10,7 +10,8 @@ Simple Cookie Clicker bot on python
 pip install -r requirements.txt
 python bot.py
 ```
-5) Launch Cookie Clicker with maximized window and disable all effects.
+5) Launch Cookie Clicker and disable fancy graphics.
+6) If bot can't catch gold cookie: screen it, crop it and save as goldCookie_user.png.
 # Hotkeys
 ```
 CTRL+ALT+C - toogle cookie clicker
