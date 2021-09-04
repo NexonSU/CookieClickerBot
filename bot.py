@@ -27,10 +27,11 @@ def AutoBuy():
         CW = pyautogui.getActiveWindow()
         if CW is not None and "Cookie Clicker" in CW.title and BuyerEnabled:
             pyautogui.click(CW.width+CW.left-550, CW.top+200)
-            ltx = CW.width*0.89+CW.left
-            lty = CW.height*0.21+CW.top
-            rbx = CW.width*0.9+CW.left
-            rby = CW.height*0.9+CW.top
+            time.sleep(1)
+            ltx = CW.width+CW.left-550
+            lty = CW.top+400
+            rbx = CW.width+CW.left-300
+            rby = CW.height+CW.top
             ClickColorInRegion(ltx, lty, rbx, rby, 102, 255, 102)
         time.sleep(15)
 
