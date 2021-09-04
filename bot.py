@@ -19,7 +19,7 @@ def SearchAndClick(file, confidenceValue, Enabled):
                 pyautogui.moveTo(pos.x, pos.y)
             except:
                 pass
-        time.sleep(2.5)
+        time.sleep(0.25)
 
 def AutoBuy(Enabled):
     while True:
