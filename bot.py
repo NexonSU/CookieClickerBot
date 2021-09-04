@@ -5,7 +5,7 @@ import threading
 import os
 from pynput import keyboard
 
-pyautogui.PAUSE = 0.01
+pyautogui.PAUSE = 0.0001
 
 ClickerEnabled = True
 GoldClickerEnabled = True
@@ -20,31 +20,35 @@ def SearchAndClick(file, confidenceValue):
                 pyautogui.moveTo(pos.x, pos.y)
             except:
                 pass
-            time.sleep(5)
+        time.sleep(5)
 
 def AutoBuy():
     while True:
         CW = pyautogui.getActiveWindow()
         if CW is not None and "Cookie Clicker" in CW.title and BuyerEnabled:
-            pyautogui.click(CW.width*0.85+CW.left, CW.height*0.1+CW.top)
-            pyautogui.click(CW.width*0.91+CW.left, CW.height*0.86+CW.top)
-            pyautogui.click(CW.width*0.91+CW.left, CW.height*0.8+CW.top)
-            pyautogui.click(CW.width*0.91+CW.left, CW.height*0.74+CW.top)
-            pyautogui.click(CW.width*0.91+CW.left, CW.height*0.68+CW.top)
-            pyautogui.click(CW.width*0.91+CW.left, CW.height*0.62+CW.top)
-            pyautogui.click(CW.width*0.91+CW.left, CW.height*0.56+CW.top)
-            pyautogui.click(CW.width*0.91+CW.left, CW.height*0.5+CW.top)
-            pyautogui.click(CW.width*0.91+CW.left, CW.height*0.44+CW.top)
-            pyautogui.click(CW.width*0.91+CW.left, CW.height*0.38+CW.top)
-            pyautogui.click(CW.width*0.91+CW.left, CW.height*0.32+CW.top)
-            pyautogui.click(CW.width*0.91+CW.left, CW.height*0.26+CW.top)
-            time.sleep(15)
+            pyautogui.click(CW.width+CW.left-550, CW.top+200)
+            ltx = CW.width*0.89+CW.left
+            lty = CW.height*0.21+CW.top
+            rbx = CW.width*0.9+CW.left
+            rby = CW.height*0.9+CW.top
+            ClickColorInRegion(ltx, lty, rbx, rby, 102, 255, 102)
+        time.sleep(15)
+
+def ClickColorInRegion(ltx, lty, rbx, rby, r, g, b):
+    s = pyautogui.screenshot(region=(ltx, lty, rbx, rby))
+    for x in range(s.width):
+        for y in range(s.height):
+            if s.getpixel((x, y)) == (r, g, b):
+                pyautogui.click(ltx+x, lty+y)
+                return
 
 def ClickTheCookie():
     while True:
         CW = pyautogui.getActiveWindow()
         if CW is not None and "Cookie Clicker" in CW.title and ClickerEnabled:
             pyautogui.click(CW.width*0.15+CW.left, CW.height*0.39+CW.top, clicks=10, interval=0.001, _pause=False)
+        else:
+            time.sleep(1)
 
 def ToogleClicker():
     global ClickerEnabled
