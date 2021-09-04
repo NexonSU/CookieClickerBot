@@ -7,25 +7,36 @@ import random
 from pynput import keyboard
 
 pyautogui.PAUSE = 0.001
-ClickerEnabled = multiprocessing.Value('i', True)
-GoldClickerEnabled = multiprocessing.Value('i', True)
-BuyerEnabled = multiprocessing.Value('i', True)
+searcher = multiprocessing.Process()
+clicker = multiprocessing.Process()
+buyer = multiprocessing.Process()
 
-def SearchAndClick(file, confidenceValue, Enabled):
+def SearchAndClick():
+    CW = pyautogui.getActiveWindow()
+    if CW is not None and "Cookie Clicker" in CW.title:
+        pos = pyautogui.locateOnScreen('goldCookie.png', grayscale=True, confidence=0.5)
+        if pos is not None:
+            pos = pyautogui.center(pos)
+            pyautogui.click(pos.x, pos.y)
+        pos = pyautogui.locateOnScreen('goldCookie_user.png', grayscale=True, confidence=0.5)
+        if pos is not None:
+            pos = pyautogui.center(pos)
+            pyautogui.click(pos.x, pos.y)
+
+def SearchAndClickService():
+    global searcher
     while True:
-        CW = pyautogui.getActiveWindow()
-        if CW is not None and "Cookie Clicker" in CW.title and Enabled.value:
-            try:
-                pos = pyautogui.locateCenterOnScreen(file, grayscale=True, confidence=confidenceValue)
-                pyautogui.click(pos.x, pos.y)
-            except:
-                pass
+        if searcher.is_alive():
+            searcher.terminate()
+        time.sleep(1)
+        searcher = multiprocessing.Process(target=SearchAndClick)
+        searcher.start()
         time.sleep(3)
 
-def AutoBuy(Enabled):
+def AutoBuy():
     while True:
         CW = pyautogui.getActiveWindow()
-        if CW is not None and "Cookie Clicker" in CW.title and Enabled.value:
+        if CW is not None and "Cookie Clicker" in CW.title:
             pyautogui.click(CW.width+CW.left-550, CW.top+200)
             time.sleep(0.1)
             ltx = CW.width+CW.left-550
@@ -43,10 +54,10 @@ def ClickColorInRegion(ltx, lty, rbx, rby, r, g, b):
                 pyautogui.click(ltx+x, lty+y)
                 return
 
-def ClickTheCookie(Enabled):
+def ClickTheCookie():
     while True:
         CW = pyautogui.getActiveWindow()
-        if CW is not None and "Cookie Clicker" in CW.title and Enabled.value:
+        if CW is not None and "Cookie Clicker" in CW.title:
             offset = int(pyautogui.size().width*0.03)
             x = CW.width*0.155+CW.left + random.randint(-offset, offset)
             y = CW.height*0.42+CW.top + random.randint(-offset, offset)
@@ -55,47 +66,45 @@ def ClickTheCookie(Enabled):
             time.sleep(1)
 
 def ToogleClicker():
-    if ClickerEnabled.value:
-        ClickerEnabled.value = False
+    global clicker
+    if clicker.is_alive():
+        clicker.terminate()
     else:
-        ClickerEnabled.value = True
+        clicker = multiprocessing.Process(target=ClickTheCookie)
+        clicker.start()
 
-def ToogleGoldClicker():
-    if GoldClickerEnabled.value:
-        GoldClickerEnabled.value = False
+def ToogleSearcher():
+    global searcher
+    if searcher.is_alive():
+        searcher.terminate()
     else:
-        GoldClickerEnabled.value = True
+        searcher = multiprocessing.Process(target=SearchAndClickService)
+        searcher.start()
 
 def ToogleBuyer():
-    if BuyerEnabled.value:
-        BuyerEnabled.value = False
+    global buyer
+    if buyer.is_alive():
+        buyer.terminate()
     else:
-        BuyerEnabled.value = True
+        buyer = multiprocessing.Process(target=AutoBuy)
+        buyer.start()
 
 def Exit():
     searcher.terminate()
-    userSearcher.terminate()
     clicker.terminate()
     buyer.terminate()
     os._exit(0)
 
 if __name__ == '__main__':
-    searcher = multiprocessing.Process(target=SearchAndClick, args=('goldCookie.png', .5, GoldClickerEnabled))
-    userSearcher = multiprocessing.Process(target=SearchAndClick, args=('goldCookie_user.png', .5, GoldClickerEnabled))
-    clicker = multiprocessing.Process(target=ClickTheCookie, args=(ClickerEnabled,))
-    buyer = multiprocessing.Process(target=AutoBuy, args=(BuyerEnabled,))
-
-    searcher.start()
-    userSearcher.start()
-    clicker.start()
-    buyer.start()
-
+    ToogleClicker()
+    ToogleSearcher()
+    ToogleBuyer()
     with keyboard.GlobalHotKeys({
             '<esc>': Exit,
             '<ctrl>+<alt>+c': ToogleClicker,
             '<ctrl>+<alt>+с': ToogleClicker,
-            '<ctrl>+<alt>+g': ToogleGoldClicker,
-            '<ctrl>+<alt>+п': ToogleGoldClicker,
+            '<ctrl>+<alt>+g': ToogleSearcher,
+            '<ctrl>+<alt>+п': ToogleSearcher,
             '<ctrl>+<alt>+b': ToogleBuyer,
             '<ctrl>+<alt>+и': ToogleBuyer}) as h:
         h.join()
