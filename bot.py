@@ -28,6 +28,7 @@ def AutoBuy():
     while True:
         curwintitle = pyautogui.getActiveWindowTitle()
         if type(curwintitle) == str and "Cookie Clicker" in curwintitle and BuyerEnabled:
+            pyautogui.click(ScreenWidth*0.85, ScreenHeight*0.1)
             pyautogui.click(ScreenWidth*0.91, ScreenHeight*0.86)
             pyautogui.click(ScreenWidth*0.91, ScreenHeight*0.8)
             pyautogui.click(ScreenWidth*0.91, ScreenHeight*0.74)
@@ -40,7 +41,6 @@ def AutoBuy():
             pyautogui.click(ScreenWidth*0.91, ScreenHeight*0.32)
             pyautogui.click(ScreenWidth*0.91, ScreenHeight*0.26)
             pyautogui.click(ScreenWidth*0.91, ScreenHeight*0.2)
-            pyautogui.click(ScreenWidth*0.85, ScreenHeight*0.1)
             time.sleep(15)
 
 def ClickTheCookie():
