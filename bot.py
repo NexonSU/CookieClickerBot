@@ -58,9 +58,8 @@ def ClickTheCookie():
     while True:
         CW = pyautogui.getActiveWindow()
         if CW is not None and "Cookie Clicker" in CW.title:
-            offset = int(pyautogui.size().width*0.03)
-            x = CW.width*0.155+CW.left + random.randint(-offset, offset)
-            y = CW.height*0.42+CW.top + random.randint(-offset, offset)
+            x = CW.width*0.155+CW.left
+            y = CW.height*0.42+CW.top
             pyautogui.click(x, y)
         else:
             time.sleep(1)
