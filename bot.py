@@ -31,28 +31,30 @@ def SearchAndClickService():
         time.sleep(1)
         searcher = multiprocessing.Process(target=SearchAndClick)
         searcher.start()
-        time.sleep(3)
+        time.sleep(1)
 
 def AutoBuy():
     while True:
         CW = pyautogui.getActiveWindow()
         if CW is not None and "Cookie Clicker" in CW.title:
             pyautogui.click(CW.width+CW.left-550, CW.top+200)
-            time.sleep(0.1)
+            time.sleep(5)
             ltx = CW.width+CW.left-550
             lty = CW.top+400
             rbx = CW.width+CW.left-300
             rby = CW.height+CW.top
             ClickColorInRegion(ltx, lty, rbx, rby, 102, 255, 102)
-        time.sleep(15)
+        time.sleep(5)
 
 def ClickColorInRegion(ltx, lty, rbx, rby, r, g, b):
     s = pyautogui.screenshot(region=(ltx, lty, rbx, rby))
-    for x in range(s.width):
-        for y in range(s.height):
-            if s.getpixel((x, y)) == (r, g, b):
-                pyautogui.click(ltx+x, lty+y)
-                return
+    for y in reversed(range(s.height)):
+        if (y % 2) == 0:
+            for x in range(s.width):
+                if (x % 2) == 0:
+                    if s.getpixel((x, y)) == (r, g, b):
+                        pyautogui.click(ltx+x, lty+y)
+                        return
 
 def ClickTheCookie():
     while True:
@@ -60,7 +62,7 @@ def ClickTheCookie():
         if CW is not None and "Cookie Clicker" in CW.title:
             x = CW.width*0.155+CW.left
             y = CW.height*0.42+CW.top
-            pyautogui.click(x, y)
+            pyautogui.click(x, y, clicks=10, interval=0.000001)
         else:
             time.sleep(1)
 
